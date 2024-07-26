@@ -26,6 +26,7 @@ class My_Weather_Widget extends WP_Widget
 
         $response = wp_remote_get(
             $endpoint_url,
+
             array('body' => array('city' => $city))
         );
         $code = wp_remote_retrieve_response_code($response);
@@ -40,7 +41,9 @@ class My_Weather_Widget extends WP_Widget
     {
         extract($args);
         echo $before_widget;
+
         $city = empty($instance['city']) ? '' : $instance['city'];
+
         echo $this->get_weather($city);
         write_log("In function " . __FUNCTION__ . ' done rendering');
         echo $after_widget;

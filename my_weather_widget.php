@@ -26,6 +26,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(plugin_dir_path(__FILE__));
 $dotenv->load();
 define('WEATHER_API_KEY', $_ENV['WEATHER_API_KEY']);
 
+
 // Register hooks
 register_activation_hook(__FILE__, 'MWW_create_db');
 register_uninstall_hook(__FILE__, 'MWW_uninstall');

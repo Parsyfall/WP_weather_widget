@@ -22,8 +22,10 @@ class My_Weather_Widget extends WP_Widget
 
     private function get_weather(string $city)
     {
+        $endpoint_url = get_site_url() . "/wp-json/myplugin/v1/weather";
+
         $response = wp_remote_get(
-            'http://localhost:10008/wp-json/myplugin/v1/weather',
+            $endpoint_url,
             array('body' => array('city' => $city))
         );
         $code = wp_remote_retrieve_response_code($response);
@@ -38,7 +40,7 @@ class My_Weather_Widget extends WP_Widget
     {
         extract($args);
         echo $before_widget;
-        $city = $instance['city'];
+        $city = empty($instance['city']) ? '' : $instance['city'];
         echo $this->get_weather($city);
         write_log("In function " . __FUNCTION__ . ' done rendering');
         echo $after_widget;

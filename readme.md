@@ -11,8 +11,6 @@ My Weather Widget is a simple WordPress plugin that allows you to display the cu
 
 ## Installation
 
-``## Installation
-
 1. **Download** the plugin.
 2. **Extract** the plugin files.
 3. **Upload** the `my-weather-widget` directory to the `/wp-content/plugins/` directory.

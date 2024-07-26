@@ -1,8 +1,12 @@
 <?php
 /**
  * Plugin Name: My Weather Widget
- * Description: Displays weather in a certain city
+ * Description: Displays current weather for a specified city using data from WeatherAPI.com. Easily add this widget to your sidebar or other widget areas to show live weather updates. The widget can be customized to display various weather details such as temperature, wind speed, humidity, and atmospheric pressure. Updates weather data every 30 minutes to ensure it provides the latest information.
  * Version: 0.0.1
+ * Author: Parsyfall
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: my-weather-widget
  */
 
 if (!defined('ABSPATH')) {

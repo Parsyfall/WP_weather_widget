@@ -16,7 +16,8 @@ function MWW_get_weather_data(WP_REST_Request $request)
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'mww_weather_records';
-    $last_entry = $wpdb->get_results("SELECT * from $table_name order by date_time desc limit 1;", OBJECT)[0];
+    $last_entry = $wpdb->get_row("SELECT * from $table_name order by date_time desc limit 1;", OBJECT);
+
     $city = $request->get_query_params()['city'];
 
     write_log("In function " . __FUNCTION__);

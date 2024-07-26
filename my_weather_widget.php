@@ -26,5 +26,17 @@ $dotenv = Dotenv\Dotenv::createImmutable(plugin_dir_path(__FILE__));
 $dotenv->load();
 define('WEATHER_API_KEY', $_ENV['WEATHER_API_KEY']);
 
+
+// Register hooks
+register_activation_hook(__FILE__, 'MWW_create_db');
+register_uninstall_hook(__FILE__, 'MWW_uninstall');
+add_action('plugins_loaded', 'MWW_update_db_check');
+add_action('rest_api_init', 'add_weather_api_route');
+add_action('widgets_init', function () {
+    register_widget('My_Weather_Widget');
+});
+add_action('admin_notices', [new AdminNotice(), 'displayAdminNotice']);
+
+
 // Initialize widget
 $widget = new My_Weather_Widget();

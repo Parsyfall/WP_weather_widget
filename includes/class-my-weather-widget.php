@@ -27,7 +27,7 @@ class My_Weather_Widget extends WP_Widget
         $response = wp_remote_get(
             $endpoint_url,
 
-            array('body' => array('city' => $city))
+            array('body' => array('MWW_city' => $city))
         );
         $code = wp_remote_retrieve_response_code($response);
         $body = wp_remote_retrieve_body($response);
@@ -42,18 +42,20 @@ class My_Weather_Widget extends WP_Widget
         extract($args);
         echo $before_widget;
 
-        $city = empty($instance['city']) ? '' : $instance['city'];
-
-        echo $this->get_weather($city);
+        $city = isset($instance['MWW_city']) ? $instance['MWW_city'] : '';
+        
+        if(!empty($city)){
+            echo $this->get_weather($city);
+        }
         write_log("In function " . __FUNCTION__ . ' done rendering');
         echo $after_widget;
     }
 
     public function form($instance)
     {
-        $city = isset($instance['city']) ? $instance['city'] : __('City', 'text-domain');
-        $field_id = $this->get_field_id('city');
-        $field_name = $this->get_field_name('city');
+        $city = isset($instance['MWW_city']) ? $instance['MWW_city'] : '';
+        $field_id = $this->get_field_id('MWW_city');
+        $field_name = $this->get_field_name('MWW_city');
         ?>
         <p>
             <label for="<?php echo $field_id ?>" id="<?php echo $field_name . 'label' ?>">City</label>
@@ -65,7 +67,7 @@ class My_Weather_Widget extends WP_Widget
     public function update($new_instance, $old_instance)
     {
         $instance = array();
-        $instance['city'] = (!empty($new_instance['city'])) ? strip_tags($new_instance['city']) : '';
+        $instance['MWW_city'] = !empty($new_instance['MWW_city']) ? strip_tags($new_instance['MWW_city']) : '';
         return $instance;
     }
 }

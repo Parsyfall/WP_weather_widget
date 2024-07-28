@@ -10,7 +10,7 @@ function MWW_create_db()
     $table_name = $wpdb->prefix . 'mww_weather_records';
     $charset_collate = $wpdb->get_charset_collate();
 
-    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+    $sql = "CREATE TABLE $table_name (
         date_time int(11) PRIMARY KEY not NULL,
         city varchar(20) NOT NULL,
         weather_status text default '',

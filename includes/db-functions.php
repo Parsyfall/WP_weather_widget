@@ -55,8 +55,7 @@ function MWW_uninstall()
     global $wpdb;
     $table_name = $wpdb->prefix . 'mww_weather_records';
     $sql = "DROP TABLE $table_name;";
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql);
+    $wpdb->query($sql);
 
     delete_option('MWW_db_version');
 }

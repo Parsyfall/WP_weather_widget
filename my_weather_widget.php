@@ -31,12 +31,12 @@ define('WEATHER_API_KEY', $_ENV['WEATHER_API_KEY']);
 
 
 // Register hooks
-register_activation_hook(__FILE__, '\\MyWeatherWidget\\MWW_create_db');
-register_uninstall_hook(__FILE__, '\\MyWeatherWidget\\MWW_uninstall');
-// add_action('plugins_loaded', '\\MyWeatherWidget\\MWW_update_db_check');
-add_action('rest_api_init', '\\MyWeatherWidget\\MWW_add_weather_api_route');
+register_activation_hook(__FILE__, 'MyWeatherWidget\MWW_create_db');
+register_uninstall_hook(__FILE__, 'MyWeatherWidget\MWW_uninstall');
+add_action('plugins_loaded', 'MyWeatherWidget\MWW_update_db_check');
+add_action('rest_api_init', 'MyWeatherWidget\MWW_add_weather_api_route');
 add_action('widgets_init', function () {
-    register_widget('My_Weather_Widget');
+    register_widget('MyWeatherWidget\\My_Weather_Widget');
 });
 add_action('admin_notices', [new AdminNotice(), 'displayAdminNotice']);
 

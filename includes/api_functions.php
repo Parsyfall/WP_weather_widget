@@ -9,7 +9,7 @@ function MWW_add_weather_api_route()
         '/weather',
         array(
             'methods'  => \WP_REST_Server::READABLE,
-            'callback' => 'MWW_get_weather_data'
+            'callback' => 'MyWeatherWidget\MWW_get_weather_data'
         )
     );
 }

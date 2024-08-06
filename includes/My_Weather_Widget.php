@@ -12,14 +12,6 @@ class My_Weather_Widget extends \WP_Widget
             array('description' => __('A widget to display weather in a city', 'text-domain'))
         );
 
-        add_action('widgets_init', function () {
-            register_widget('My_Weather_Widget');
-        });
-        register_activation_hook(__FILE__, 'MWW_create_db');
-        register_uninstall_hook(__FILE__, 'MWW_uninstall');
-        add_action('plugins_loaded', 'MWW_update_db_check');
-        add_action('rest_api_init', 'add_weather_api_route');
-        add_action('admin_notices', [new AdminNotice(), 'displayAdminNotice']);
     }
 
     private function get_weather(string $city)

@@ -1,5 +1,7 @@
 <?php
 
+namespace MyWeatherWidget;
+
 class AdminNotice
 {
     const NOTICE_FIELD = 'my_admin_notice_message';

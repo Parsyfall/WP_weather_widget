@@ -1,13 +1,17 @@
 <?php
 
+namespace MyWeatherWidget;
+
 function write_log($data)
 {
-    if (true === WP_DEBUG) {
-        if (is_array($data) || is_object($data)) {
-            error_log(print_r($data, true));
-        } else {
-            error_log($data);
-        }
+    if (true !== WP_DEBUG) {
+        return;
+    }
+
+    if (is_array($data) || is_object($data)) {
+        error_log(print_r($data, true));
+    } else {
+        error_log($data);
     }
 }
 
@@ -20,13 +24,13 @@ function MWW_render_response(array|null $json)
         return "<p>Weather service unavailable</p>";
     }
 
-    $city = $json['city'];
-    $weather_status = $json['weather_status'];
-    $temp_c = $json['temp_c'];
-    $wind_speed_kph = $json['wind_speed'];
-    $wind_dir = $json['wind_dir'];
-    $pressure_mmhg = $json['atm_press'];
-    $humidity = $json['humidity'];
+    $city = sanitize_text_field($json['city']);
+    $weather_status = sanitize_text_field($json['weather_status']);
+    $temp_c = sanitize_text_field($json['temp_c']);
+    $wind_speed_kph = sanitize_text_field($json['wind_speed']);
+    $wind_dir = sanitize_text_field($json['wind_dir']);
+    $pressure_mmhg = sanitize_text_field($json['atm_press']);
+    $humidity = sanitize_text_field($json['humidity']);
 
     write_log('End of ' . __FUNCTION__);
     return "<p>

@@ -43,8 +43,8 @@ class My_Weather_Widget extends WP_Widget
         echo $before_widget;
 
         $city = isset($instance['MWW_city']) ? $instance['MWW_city'] : '';
-        
-        if(!empty($city)){
+
+        if (!empty($city)) {
             echo $this->get_weather($city);
         }
         write_log("In function " . __FUNCTION__ . ' done rendering');
@@ -56,12 +56,13 @@ class My_Weather_Widget extends WP_Widget
         $city = isset($instance['MWW_city']) ? $instance['MWW_city'] : '';
         $field_id = $this->get_field_id('MWW_city');
         $field_name = $this->get_field_name('MWW_city');
-        ?>
+?>
         <p>
-            <label for="<?php echo $field_id ?>" id="<?php echo $field_name . 'label' ?>">City</label>
-            <input id="<?php echo $field_id ?>" name="<?php echo $field_name ?>" type="text" class="widefat" placeholder="eg. London" value="<?php echo esc_attr($city); ?>">
+            <label for="<?php echo sanitize_text_field($field_id) ?>" id="<?php echo sanitize_text_field($field_name) . 'label' ?>">City</label>
+            <input id="<?php echo sanitize_text_field($field_id) ?>" name="<?php echo sanitize_text_field($field_name) ?>" type="text" 
+            class="widefat" placeholder="eg. London" value="<?php echo sanitize_text_field($city); ?>">
         </p>
-        <?php
+<?php
     }
 
     public function update($new_instance, $old_instance)

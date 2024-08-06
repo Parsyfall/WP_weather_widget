@@ -1,18 +1,20 @@
 <?php
 
+namespace MyWeatherWidget;
+
 function MWW_add_weather_api_route()
 {
     register_rest_route(
         'myplugin/v1',
         '/weather',
         array(
-            'methods'  => WP_REST_Server::READABLE,
+            'methods'  => \WP_REST_Server::READABLE,
             'callback' => 'MWW_get_weather_data'
         )
     );
 }
 
-function MWW_get_weather_data(WP_REST_Request $request)
+function MWW_get_weather_data(\WP_REST_Request $request)
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'mww_weather_records';
@@ -35,18 +37,18 @@ function MWW_get_weather_data(WP_REST_Request $request)
         $error_msg = $json['error']['message'];
         AdminNotice::displayError("An error occurred in '" . plugin_basename(__FILE__) . "': $error_msg Error code: $error_code");
 
-        return new WP_REST_Response(array(), wp_remote_retrieve_response_code($response));
+        return new \WP_REST_Response(array(), wp_remote_retrieve_response_code($response));
     }
 
     if (is_wp_error($response)) {
         if (is_null($last_entry)) {
             write_log('Error and no db data');
-            return new WP_Error(array(), 5004);
+            return new \WP_Error(array(), 5004);
         }
 
         write_log('No response from weather api, lucky me I have some data in db');
         $db_data = json_decode(json_encode($last_entry), true);
-        return new WP_REST_Response($db_data, 2001);
+        return new \WP_REST_Response($db_data, 2001);
     }
 
     if (is_null($last_entry) || time() - $last_entry->date_time >= 1800) {
@@ -71,5 +73,5 @@ function MWW_get_weather_data(WP_REST_Request $request)
     $data = json_decode(json_encode($last_entry), true);
     write_log('Render data');
 
-    return new WP_REST_Response($data, 200);
+    return new \WP_REST_Response($data, 200);
 }

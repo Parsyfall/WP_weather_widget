@@ -13,6 +13,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+use MyWeatherWidget\AdminNotice;
+use MyWeatherWidget\My_Weather_Widget;
+
 // Load dependencies
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-my-weather-widget.php';

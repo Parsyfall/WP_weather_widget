@@ -1,5 +1,7 @@
 <?php
 
+namespace MyWeatherWidget;
+
 global $MWW_db_version;
 $MWW_db_version = '1.0';
 

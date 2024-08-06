@@ -1,5 +1,7 @@
 <?php
 
+namespace MyWeatherWidget;
+
 function write_log($data)
 {
     if (true !== WP_DEBUG) {

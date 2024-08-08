@@ -1,8 +1,5 @@
 <?php
 
-// TODO: Incapsulate all these functions in a class
-
-
 namespace MyWeatherWidget;
 
 class DataBaseManipulator
@@ -31,7 +28,7 @@ class DataBaseManipulator
         return self::$instance;
     }
 
-    private function createDbTable(): void
+    public function createDbTable(): void
     {
         global $wpdb;
 
@@ -39,7 +36,7 @@ class DataBaseManipulator
         $charset_collate = $wpdb->get_charset_collate();
 
         // TODO: Test if table is created correctly
-        $sql = "CREATE TABLE " . self::$table_name . " (
+        $sql = "CREATE TABLE if not exists " . self::$table_name . " (
             date_time int(11) PRIMARY KEY not NULL,
             city varchar(20) NOT NULL,
             weather_status text default '',
@@ -55,7 +52,7 @@ class DataBaseManipulator
         add_option('MWW_db_version', self::$version);
     }
 
-    public function dropTable(): void
+    public static function dropTable(): void
     {
         global $wpdb;
         $sql = "DROP TABLE " . self::$table_name . ";";

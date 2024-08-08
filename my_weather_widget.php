@@ -16,12 +16,9 @@ if (!defined('ABSPATH')) {
 
 
 // Load dependencies
-require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-require_once plugin_dir_path(__FILE__) . 'includes/My_Weather_Widget.php';
-require_once plugin_dir_path(__FILE__) . 'includes/AdminNotice.php';
-require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
-require_once plugin_dir_path(__FILE__) . 'includes/db_functions.php';
+$autoloader = require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api_functions.php';
+require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 
 // Load API key
 $dotenv = \Dotenv\Dotenv::createImmutable(plugin_dir_path(__FILE__));
@@ -32,7 +29,7 @@ $dbManipulator = MyWeatherWidget\DataBaseManipulator::getInstance();
 
 // Register hooks
 register_activation_hook(__FILE__, [$dbManipulator, 'createDbTable']);
-register_uninstall_hook(__FILE__, [$dbManipulator, 'dropTable']);
+register_uninstall_hook(__FILE__, ['MyWeatherWidget\DataBaseManipulator::dropTable']);
 add_action('plugins_loaded', [$dbManipulator, 'updateTable']);
 add_action('rest_api_init', 'MyWeatherWidget\MWW_add_weather_api_route');
 add_action('widgets_init', function () {

@@ -1,6 +1,7 @@
 <?php
 
 namespace MyWeatherWidget;
+use function MyWeatherWidget\write_log;
 
 function MWW_add_weather_api_route()
 {

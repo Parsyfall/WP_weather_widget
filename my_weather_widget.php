@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 
 
 // Load dependencies
-$autoloader = require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api_functions.php';
 require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 

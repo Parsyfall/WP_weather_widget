@@ -80,13 +80,12 @@ class DataBaseManipulator
         delete_option('MWW_db_version');
     }
 
-    public function getLatesEntry(): object
+    public function getLatesEntry(): ?object
     { // Return most recent entry in db
 
         // TODO: Retrieve latest entry by city
         global $wpdb;
         $row = $wpdb->get_row("SELECT * from " . self::$table_name . " order by date_time desc limit 1;", OBJECT);
-        $this->lastInsertionTime = new DateTimeImmutable();
 
         return $row;
     }
@@ -98,12 +97,19 @@ class DataBaseManipulator
         global $wpdb;
         $format = array('%d', '%s', '%s', '%f', '%f', '%s', '%f', '%d');
         $wpdb->insert(self::$table_name, $data, $format);
+        $this->lastInsertionTime = new DateTimeImmutable();
     }
 
+    /**
+     * Check whether database data is old
+     *
+     * @return boolean
+     * Returns true if there is no data or it's old, otherwise false
+     */
     public function isStale(): bool
     { // check if data needs to be updated
         if (!isset($this->lastInsertionTime)) {
-            return false;
+            return true;
         }
 
         return $this->lastInsertionTime->diff(new DateTimeImmutable())->m >= 30;

@@ -1,7 +1,14 @@
 <?php
 
 namespace MyWeatherWidget;
+
 use function MyWeatherWidget\write_log;
+
+
+// TODO: Move all functionality do underneath class 
+class WeatherApiHandler
+{
+}
 
 function MWW_add_weather_api_route()
 {
@@ -17,9 +24,8 @@ function MWW_add_weather_api_route()
 
 function MWW_get_weather_data(\WP_REST_Request $request)
 {
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'mww_weather_records';
-    $last_entry = $wpdb->get_row("SELECT * from $table_name order by date_time desc limit 1;", OBJECT);
+    $db = DataBaseManipulator::getInstance();
+    $last_entry = $db->getLatesEntry();
 
     $city = sanitize_text_field($request->get_query_params()['MWW_city']);
 
@@ -27,7 +33,7 @@ function MWW_get_weather_data(\WP_REST_Request $request)
 
     $url = 'http://api.weatherapi.com/v1/current.json?key=' . WEATHER_API_KEY . '&q=' . $city . '&aqi=no';
 
-    $response = wp_remote_get($url, array('format' => 'JSON'));
+    $response = wp_remote_get($url, array('format' => 'JSON', 'timeout' => 60));
 
     write_log(wp_remote_retrieve_response_code($response));
     $json = json_decode($response['body'], true);
@@ -66,9 +72,7 @@ function MWW_get_weather_data(\WP_REST_Request $request)
             'humidity'       => sanitize_text_field($json['current']['humidity']),
         );
 
-        $format = array('%d', '%s', '%s', '%f', '%f', '%s', '%f', '%d');
-
-        $wpdb->insert($table_name, $data, $format);
+        $db->insert($data);
     }
 
     $data = json_decode(json_encode($last_entry), true);

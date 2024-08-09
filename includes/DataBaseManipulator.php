@@ -2,21 +2,40 @@
 
 namespace MyWeatherWidget;
 
+use DateTimeImmutable;
+
+// FIXME: Do something about timezones
+
 class DataBaseManipulator
 {
-    private static $table_name;
-    private static $version;
-    private static $instance;
+    private static string $table_name;
+    private static string $version;
+    private static DataBaseManipulator $instance;
+    private DateTimeImmutable $lastInsertionTime;
 
     private function __construct()
     {
         self::$version = '0.1';
         if (get_site_option('MWW_db_version') !== self::$version) {
-            $this->updateTable();
+            $this->updateTableStructure();
         }
 
         $this->createDbTable();
         // TODO: Move install and unistall hooks here
+    }
+
+
+    public function updateTableStructure(): void
+    { // Reserved for future db structural modifications / migrations
+        // FIXME: Not entirely implemented, provide a implementation
+
+        // Update version number
+        self::$version = '';
+
+        $sql = '';
+        global $wpdb;
+        $wpdb->query($sql);
+        update_option('MWW_db_version', self::$version);
     }
 
     public static function getInstance(): DataBaseManipulator
@@ -36,7 +55,7 @@ class DataBaseManipulator
         $charset_collate = $wpdb->get_charset_collate();
 
         // TODO: Test if table is created correctly
-        $sql = "CREATE TABLE if not exists " . self::$table_name . " (
+        $sql = "CREATE TABLE " . self::$table_name . " (
             date_time int(11) PRIMARY KEY not NULL,
             city varchar(20) NOT NULL,
             weather_status text default '',
@@ -61,16 +80,32 @@ class DataBaseManipulator
         delete_option('MWW_db_version');
     }
 
-    public function updateTable(): void
-    { // Reserved for future db structural modifications / migrations
-        // FIXME: Not entirely implemented, provide a implementation
+    public function getLatesEntry(): object
+    { // Return most recent entry in db
 
-        // Update version number
-        self::$version = '';
-
-        $sql = '';
+        // TODO: Retrieve latest entry by city
         global $wpdb;
-        $wpdb->query($sql);
-        update_option('MWW_db_version', self::$version);
+        $row = $wpdb->get_row("SELECT * from " . self::$table_name . " order by date_time desc limit 1;", OBJECT);
+        $this->lastInsertionTime = new DateTimeImmutable();
+
+        return $row;
+    }
+
+    public function insert(array $data): void
+    { // insert data in db, update lastInsertionTime
+        // TODO: check if all necesary fields are provided
+
+        global $wpdb;
+        $format = array('%d', '%s', '%s', '%f', '%f', '%s', '%f', '%d');
+        $wpdb->insert(self::$table_name, $data, $format);
+    }
+
+    public function isStale(): bool
+    { // check if data needs to be updated
+        if (!isset($this->lastInsertionTime)) {
+            return false;
+        }
+
+        return $this->lastInsertionTime->diff(new DateTimeImmutable())->m >= 30;
     }
 }

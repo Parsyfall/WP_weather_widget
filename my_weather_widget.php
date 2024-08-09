@@ -30,7 +30,7 @@ $dbManipulator = MyWeatherWidget\DataBaseManipulator::getInstance();
 // Register hooks
 register_activation_hook(__FILE__, [$dbManipulator, 'createDbTable']);
 register_uninstall_hook(__FILE__, ['MyWeatherWidget\DataBaseManipulator::dropTable']);
-add_action('plugins_loaded', [$dbManipulator, 'updateTable']);
+add_action('plugins_loaded', [$dbManipulator, 'updateTableStructure']);
 add_action('rest_api_init', 'MyWeatherWidget\MWW_add_weather_api_route');
 add_action('widgets_init', function () {
     register_widget('MyWeatherWidget\\My_Weather_Widget');

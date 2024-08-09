@@ -2,6 +2,8 @@
 
 namespace MyWeatherWidget;
 
+use MyWeatherWidget\TwigRenderer;
+
 function write_log($data)
 {
     if (true !== WP_DEBUG) {
@@ -34,8 +36,7 @@ function MWW_render_response(array|null $json)
         'humidity'       => sanitize_text_field($json['humidity']),
     ];
     write_log('End of ' . __FUNCTION__);
-    
-    $loader = new \Twig\Loader\FilesystemLoader(plugin_dir_path(__FILE__) . '../view');
-    $twig = new \Twig\Environment($loader);
-    return $twig->render('widget.html', $values);
+
+    $renderer = new TwigRenderer();
+    return $renderer->render('widgetDisplay.twig', $values);
 }

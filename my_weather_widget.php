@@ -10,6 +10,11 @@
  * Text Domain: my-weather-widget
  */
 
+use MyWeatherWidget\DataBaseManipulator;
+use MyWeatherWidget\WeatherApiHandler;
+use MyWeatherWidget\AdminNotice;
+use Dotenv\Dotenv;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -17,25 +22,25 @@ if (!defined('ABSPATH')) {
 
 // Load dependencies
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-require_once plugin_dir_path(__FILE__) . 'includes/api_functions.php';
 require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 
 // Load API key
-$dotenv = \Dotenv\Dotenv::createImmutable(plugin_dir_path(__FILE__));
+$dotenv = Dotenv::createImmutable(plugin_dir_path(__FILE__));
 $dotenv->load();
 define('WEATHER_API_KEY', $_ENV['WEATHER_API_KEY']);
 
-$dbManipulator = MyWeatherWidget\DataBaseManipulator::getInstance();
+$dbManipulator = DataBaseManipulator::getInstance();
+$apiHandler = new WeatherApiHandler(WEATHER_API_KEY);
 
 // Register hooks
 register_activation_hook(__FILE__, [$dbManipulator, 'createDbTable']);
 register_uninstall_hook(__FILE__, ['MyWeatherWidget\DataBaseManipulator::dropTable']);
 add_action('plugins_loaded', [$dbManipulator, 'updateTableStructure']);
-add_action('rest_api_init', 'MyWeatherWidget\MWW_add_weather_api_route');
+add_action('rest_api_init', [$apiHandler, 'registerRoute']);
 add_action('widgets_init', function () {
     register_widget('MyWeatherWidget\\My_Weather_Widget');
 });
-add_action('admin_notices', [new MyWeatherWidget\AdminNotice(), 'displayAdminNotice']);
+add_action('admin_notices', [new AdminNotice(), 'displayAdminNotice']);
 
 
 // Initialize widget

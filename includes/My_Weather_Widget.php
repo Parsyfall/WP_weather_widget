@@ -15,13 +15,17 @@ class My_Weather_Widget extends \WP_Widget
 
     private function get_weather(string $city)
     {
-        $endpoint_url = get_site_url() . "/wp-json/myplugin/v1/weather";
+        $endpoint_url = get_site_url() . "/wp-json/MyWeatherWidget/v1/weather";
 
         $response = wp_remote_get(
             $endpoint_url,
 
             array('body' => array('MWW_city' => $city))
         );
+
+        if (is_wp_error($response)) {
+            return MWW_render_response(null);
+        }
 
         $body = wp_remote_retrieve_body($response);
         $ret_val = json_decode($body, true);

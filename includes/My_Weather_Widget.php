@@ -55,7 +55,7 @@ class My_Weather_Widget extends \WP_Widget
             'field_name' => $this->get_field_name('MWW_city'),
         ];
         $renderer = new TwigRenderer();
-        $renderer->render('widgetForm.twig', $data);
+        echo $renderer->render('widgetForm.twig', $data);
     }
 
     public function update($new_instance, $old_instance)
